@@ -1,0 +1,187 @@
+" specify directory for plugins
+call plug#begin('~/.config/nvim/plugged')
+
+Plug 'navarasu/onedark.nvim'
+
+" LSP config
+Plug 'neovim/nvim-lspconfig'
+Plug 'hrsh7th/nvim-cmp'
+
+" LSP completion source for nvim-cmp
+Plug 'hrsh7th/cmp-nvim-lsp'
+
+" cmp Plugin to work with UtilSnips
+Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+
+" Other usefull completion sources
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-buffer'
+
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+
+" Misc
+Plug 'scrooloose/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+Plug 'preservim/nerdcommenter'
+Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-surround'
+Plug 'shumphrey/fugitive-gitlab.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
+" Copilot
+Plug 'github/copilot.vim'
+
+
+" Language plugins
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'ray-x/go.nvim'
+Plug 'ray-x/guihua.lua'
+" To enable more of the features of rust-analyzer, such as inlay hints and more!
+Plug 'simrat39/rust-tools.nvim'
+" Treesitter for syntax highlighting
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Astro code highlighting
+Plug 'wuelnerdotexe/vim-astro'
+" Elixir code extension
+Plug 'mhanberg/elixir.nvim'
+
+" initialize plugin system
+call plug#end()
+
+syntax on
+let g:onedark_config = {
+  \ 'style': 'deep',
+  \ 'toggle_style_key': '<leader>ts',
+  \ 'ending_tildes': v:true,
+  \ 'diagnostics': {
+    \ 'darker': v:false,
+    \ 'background': v:false,
+  \ },
+\ }
+colorscheme onedark
+
+set nocompatible            " disable compatibility to old-time vi
+set showmatch               " show matching brackets.
+set ignorecase              " case insensitive matching
+set mouse=v                 " middle-click paste with mouse
+set nohlsearch              " highlight search results
+set autoindent              " indent a new line the same amount as the line just typed
+set number relativenumber   " add line numbers
+set wildmode=longest,list   " get bash-like tab completions
+" set cc=80                   " set an 80 column border for good coding style
+filetype plugin indent on   " allows auto-indenting depending on file type
+set tabstop=4               " number of columns occupied by a tab character
+set expandtab               " converts tabs to white space
+set shiftwidth=4            " width for autoindents
+set softtabstop=4           " see multiple spaces as tabstops so <BS> does the right thing
+set hidden                  "
+set nowrap
+set incsearch
+set scrolloff=8
+
+" map leader
+let g:mapleader = ' '
+let g:python3_host_prog = '/Users/stephenpeterkins/.pyenv/versions/3.9.11/bin/python3'
+
+" golang pls
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
+let g:go_fmt_command = "gofmt"
+let g:syntastic_go_checkers = ['golint', 'govet', 'errcheck']
+
+" Astro plugins
+let g:astro_typescript = 'enable'
+
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files hidden=true<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep hidden=true<cr>
+nnoremap <leader>fb <cmd>Telescope buffers hidden=true<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags hidden=true<cr>
+
+" NerdTree shortcuts
+let NERDTreeShowHidden=1
+map <leader>nn :NERDTreeToggle<cr>
+map <leader>nb :NERDTreeFromBookmark
+map <leader>nf :NERDTreeFind<cr>
+map <leader>nr :NERDTreeRefreshRoot<cr>
+
+" netrw settings
+let g:netrw_banner = 0
+map <leader>ef <cmd>Explore<cr>
+map <leader>sf <cmd>Sexplore<cr>
+map <leader>vf <cmd>Vexplore<cr>
+map <leader>tf <cmd>Texplore<cr>
+
+" Git browsing
+map <leader>gb :lua require("gitlab_commands").gbrowse_line() <cr>
+
+" Copilot settings
+imap <silent><script><expr> <C-j> copilot#Accept("<CR>")
+let g:copilot_no_tab_map = v:true
+
+" Yui settings
+" Specify the OpenAI API key
+set runtimepath^=~/.config/nvim/lua/yui.nvim/lua
+
+let g:yui_api_key = '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'
+
+" Define the YuiChat command
+command! YuiChat call luaeval("require('yui').chat.new_chat_session()")
+
+" Optionally, you could define a mapping to call YuiChat
+nnoremap <leader>yu :YuiChat<CR>
+
+
+" Easy window navigation
+noremap <C-h> <C-w>h
+noremap <C-j> <C-w>j
+noremap <C-k> <C-w>k
+noremap <C-l> <C-w>l
+
+" Allow yank to copy to clipboard
+set clipboard+=unnamedplus
+
+" Require our lsp config
+lua require("lsp_config")
+
+" nvim_cmp setup
+" Set completeopt to have a better completion experience
+" :help completeopt
+" menuone: popup even when there's only one match
+" noinsert: Do not insert text until a selection is made
+" noselect: Do not select, force user to select one from the menu
+set completeopt=menuone,noinsert,noselect
+
+" Avoid showing extra messages when using completion
+set shortmess+=c
+lua require("auto_complete")
+
+" Tree sitter
+lua require("tree_sitter")
+
+"lua require("elixir").setup()
+
+fun! TrimWhitespace()
+    let l:save = winsaveview()
+    keeppatterns %s/\s\+$//e
+    call winrestview(l:save)
+endfun
+
+augroup BEARGUY
+    autocmd!
+    autocmd BufWritePre * :call TrimWhitespace()
+augroup END
+
+" go commands
+lua require("go").setup()
+autocmd BufWritePre *.go :silent! lua require('go.format').gofmt()
+

@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "yui-python"
+version = "0.1.0"
+description = "python functionality required for yui"
+authors = ["bearguy"]
+readme = "README.md"
+packages = [{include = "yui_python"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+tiktoken = "^0.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
